@@ -30,7 +30,7 @@ python -m torch.distributed.launch --nproc_per_node 1 --master_port 10010 --use_
 ```
 
 ## :round_pushpin: Inference
-Our checkpoint is available on [Google Drive]().
+Our checkpoint is available on [Google Drive](https://drive.google.com/file/d/1qaJhup2hhequeVbd-RnPlzloMfj-PNK1/view?usp=sharing).
 ```bash
 python inference_mevis.py --with_box_refine --binary --freeze_text_encoder --output_dir [output path] --resume [checkpoint path] --ngpu 1 --batch_size 1 --backbone swin_l_p4w7 --mevis_path [MeViS path] --split valid --clip_len 30 --context_all (optional, no sampling mode)
 ```
