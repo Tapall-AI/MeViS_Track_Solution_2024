@@ -7,7 +7,7 @@
 <sup>+</sup> Equal Contributions, 
 <sup>\*</sup> Corresponding Authors
 
-[Report]() (to be released soon)
+[Report](https://arxiv.org/pdf/2406.07043)
 
 ![Demo](assets/demo.png)
 
