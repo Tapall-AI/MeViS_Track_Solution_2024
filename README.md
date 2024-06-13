@@ -35,5 +35,18 @@ Our checkpoint is available on [Google Drive](https://drive.google.com/file/d/1q
 python inference_mevis.py --with_box_refine --binary --freeze_text_encoder --output_dir [output path] --resume [checkpoint path] --ngpu 1 --batch_size 1 --backbone swin_l_p4w7 --mevis_path [MeViS path] --split valid --sub_video_len 30 --no_sampling (optional, no sampling mode)
 ```
 
+## :book: Citation
+If you find our solution useful for your research, please consider citing with this BibTeX:
+```bibtex
+@misc{gao20241st,
+      title={1st Place Solution for MeViS Track in CVPR 2024 PVUW Workshop: Motion Expression guided Video Segmentation}, 
+      author={Mingqi Gao and Jingnan Luo and Jinyu Yang and Jungong Han and Feng Zheng},
+      year={2024},
+      eprint={2406.07043},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV}
+}
+```
+
 ## :raised_hands: Acknowledgement
 The solution is based on [MUTR](https://github.com/OpenGVLab/MUTR) and [MeViS](https://github.com/henghuiding/MeViS). Thanks for the authors for their efforts.
