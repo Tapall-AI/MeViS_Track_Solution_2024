@@ -1,5 +1,5 @@
 '''
-Inference code for MUTR, on Ref-Youtube-VOS
+Inference code for MUTR, on MeViS
 Modified from DETR (https://github.com/facebookresearch/detr)
 '''
 import argparse
@@ -14,11 +14,8 @@ import torch
 import util.misc as utils
 from models import build_model
 import torchvision.transforms as T
-import matplotlib.pyplot as plt
 import os
-import cv2
-from PIL import Image, ImageDraw
-import math
+from PIL import Image
 import torch.nn.functional as F
 import json
 
@@ -31,11 +28,7 @@ import threading
 from tools.colormap import colormap
 import warnings
 warnings.filterwarnings('ignore')
-import shutil
 
-# colormap
-color_list = colormap()
-color_list = color_list.astype('uint8').tolist()
 
 # build transform
 transform = T.Compose([
@@ -75,18 +68,17 @@ def main(args):
 	random.seed(seed)
 
 	split = args.split
+	
 	# save path
 	output_dir = args.output_dir
-	#save_path_prefix = os.path.join(output_dir, split)
-	TEST_DATASET = 'refytvos2021'
+	TEST_DATASET = 'mevis'
 	CKPT = args.model_ckpt[:-4]
 	TEST_DATASET_SPLIT = split
 	exp_name = args.backbone
 	eval_name = '{}_{}_{}_ckpt_{}'.format(TEST_DATASET,
 											TEST_DATASET_SPLIT,
 											exp_name, CKPT)
-	# save_path_prefix = os.path.join(output_dir, '{}'.format(eval_name), 'Annotations')
-	save_path_prefix = output_dir
+	save_path_prefix = os.path.join(output_dir, '{}'.format(eval_name), 'Annotations')
 	if not os.path.exists(save_path_prefix):
 		os.makedirs(save_path_prefix)
 
@@ -96,13 +88,12 @@ def main(args):
 			os.makedirs(save_visualize_path_prefix)
 
     # load data
-	root = Path(args.mevis_path)        # mevis
+	root = Path(args.mevis_path)
 	img_folder = os.path.join(root, split, "JPEGImages")
 	meta_file = os.path.join(root, split, "meta_expressions.json")
 	with open(meta_file, "r") as f:
 		data = json.load(f)["videos"]
-	valid_test_videos = set(data.keys())
-	valid_videos = valid_test_videos    # - test_videos
+	valid_videos = set(data.keys())
 	video_list = sorted([video for video in valid_videos])
 
 	# create subprocess
@@ -142,6 +133,7 @@ def main(args):
 
 	print("Total inference time: %.4f s" %(total_time))
 
+
 def sub_processor(lock, pid, args, data, save_path_prefix, img_folder, video_list):
 	text = 'processor %d' % pid
 	with lock:
@@ -152,14 +144,13 @@ def sub_processor(lock, pid, args, data, save_path_prefix, img_folder, video_lis
 			ncols=0
 		)
 	torch.cuda.set_device(pid)
-	context_all = args.context_all
-	clip_len = args.clip_len
+	no_sampling = args.no_sampling
+	sub_video_len = args.sub_video_len
 
 	# model
 	model, _, _ = build_model(args) 
 	device = args.device
 	model.to(device)
-
 	model_without_ddp = model
 	n_parameters = sum(p.numel() for p in model.parameters() if p.requires_grad)
 
@@ -206,26 +197,27 @@ def sub_processor(lock, pid, args, data, save_path_prefix, img_folder, video_lis
 			frame_names = meta[i]["frames"]
 
 			slices = []
-			num_sub_samples = int(len(frame_names) / clip_len)
+			num_sub_samples = int(len(frame_names) / sub_video_len)
 			if num_sub_samples == 0:
 				num_sub_samples = 1
 
-			if len(frame_names) % clip_len != 0 and len(frame_names) > clip_len:
+			if len(frame_names) % sub_video_len != 0 and len(frame_names) > sub_video_len:
 				num_sub_samples += 1
 
 			for ni in range(num_sub_samples):
-				if context_all:
-					slices.append(slice(ni*clip_len, min((ni+1)*clip_len, len(frame_names)), 1))
+				if no_sampling:
+					slices.append(slice(ni*sub_video_len, min((ni+1)*sub_video_len, len(frame_names)), 1))
 				else:
+					# non-continuous sampling
 					slices.append(slice(ni, len(frame_names), num_sub_samples))
-					# uncomment if using continuous mode
+					# uncomment the code below if using continuous sampling
 					# slices.append(slice(ni*clip_len, min((ni+1)*clip_len, len(frame_names)), 1))
 
 			mti_hs_box_list = []
 			pred_masks_list = []
 			sub_frame_name_list = []
 
-			for si, s in enumerate(slices):
+			for s in slices:
 				sub_frame_names = frame_names[s]
 				sub_video_len = len(sub_frame_names)
 
@@ -249,7 +241,7 @@ def sub_processor(lock, pid, args, data, save_path_prefix, img_folder, video_lis
 				pred_logits = outputs["pred_logits"][0]   
 				pred_masks = outputs["pred_masks"][0]
 
-				if context_all:
+				if no_sampling:
 					pred_masks_list.append(pred_masks)
 					sub_frame_name_list.append(sub_frame_names)
 					continue
@@ -277,7 +269,8 @@ def sub_processor(lock, pid, args, data, save_path_prefix, img_folder, video_lis
 					save_file = os.path.join(save_path, frame_name + ".png")
 					mask.save(save_file)
 
-			if context_all:
+			if no_sampling:
+				# no sampling
 				# interactions between text and the whole video
 				with torch.no_grad():
 					pred_logits = model.inference_long_term(mti_hs_box_list, t=len(frame_names))
@@ -374,7 +367,6 @@ def vis_add_mask(img, mask, color):
 	return origin_img
 
   
-
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser('MUTR inference script', parents=[opts.get_args_parser()])
 	args = parser.parse_args()
