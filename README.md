@@ -1,8 +1,8 @@
-## 1st Place Solution for MeViS Track in CVPR 2024 PVUW workshop: Motion Expression guided Video Segmentation
+## 1st Place Solution for MeViS Track in CVPR 2024 PVUW Workshop: Motion Expression guided Video Segmentation
 
 [Mingqi Gao](mingqigao.com)<sup>1,4,+</sup>, [Jingnan Luo](https://github.com/haodi19)<sup>2,+</sup>, [Jinyu Yang](https://scholar.google.com/citations?user=iq5N7JgAAAAJ&hl=en)<sup>1,\*</sup>, [Jungong Han](jungonghan.github.io)<sup>3,4</sup>, [Feng Zheng](https://faculty.sustech.edu.cn/?tagid=fengzheng&lang=en)<sup>1,2,*</sup>
 
-<sup>1</sup> [Tapall.ai](tapall.ai) &nbsp; <sup>2</sup> Southern University of Science and Technology &nbsp; <sup>3</sup> University of Sheffield &nbsp; <sup>4</sup> University of Warwick
+<sup>1</sup> [Tapall.ai](https://tapall.ai/) &nbsp; <sup>2</sup> Southern University of Science and Technology &nbsp; <sup>3</sup> University of Sheffield &nbsp; <sup>4</sup> University of Warwick
 
 <sup>+</sup> Equal Contributions, 
 <sup>\*</sup> Corresponding Authors
