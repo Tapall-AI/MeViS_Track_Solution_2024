@@ -7,7 +7,7 @@
 <sup>+</sup> Equal Contributions, 
 <sup>\*</sup> Corresponding Authors
 
-[Report](https://arxiv.org/pdf/2406.07043)
+:page_with_curl: [Technical Report](https://arxiv.org/pdf/2406.07043) :bookmark: [Awesome Work List in Video Object Segmentation](https://github.com/gaomingqi/Awesome-Video-Object-Segmentation)
 
 ![Demo](assets/demo.png)
 
