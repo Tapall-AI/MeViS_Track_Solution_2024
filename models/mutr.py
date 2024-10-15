@@ -125,12 +125,12 @@ class MUTR(nn.Module):
         # Build Text Encoder
         # self.tokenizer = BertTokenizer.from_pretrained('bert-base-cased')
         # self.text_encoder = BertModel.from_pretrained('bert-base-cased')
-        # self.tokenizer = RobertaTokenizerFast.from_pretrained('roberta-base')
-        # self.text_encoder = RobertaModel.from_pretrained('roberta-base')
+        self.tokenizer = RobertaTokenizerFast.from_pretrained('roberta-base')
+        self.text_encoder = RobertaModel.from_pretrained('roberta-base')
 
-        # Build Text Encoder
-        self.tokenizer = RobertaTokenizerFast.from_pretrained('/ssd1/gaomingqi/checkpoints/ReferFormer/roberta-base')
-        self.text_encoder = RobertaModel.from_pretrained('/ssd1/gaomingqi/checkpoints/ReferFormer/roberta-base')
+        # # Build Text Encoder (if roberta-base - huggingface cannot be accessed)
+        # self.tokenizer = RobertaTokenizerFast.from_pretrained('path to your local roberta-base')
+        # self.text_encoder = RobertaModel.from_pretrained('path to your local roberta-base')
 
         if freeze_text_encoder:
             for p in self.text_encoder.parameters():

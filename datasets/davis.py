@@ -4,7 +4,7 @@ Ref-Davis17 data loader
 from pathlib import Path
 
 import torch
-from torch.autograd.grad_mode import F
+# from torch.autograd.grad_mode import F
 from torch.utils.data import Dataset
 import datasets.transforms_video as T
 import os

@@ -26,13 +26,35 @@ cd ../..
 1. Download MUTR's checkpoint from [HERE](https://drive.google.com/file/d/1e2-BXV3HGxPxWFKO-z34PZDBShCzEmz9/view?usp=sharing) (Swin-L, joint-training on Ref-COCO series and Ref-YouTube-VOS).
 2. Run following commands to fine-tune MUTR on MeViS:
 ```bash
-python -m torch.distributed.launch --nproc_per_node 1 --master_port 10010 --use_env train.py --freeze_text_encoder --with_box_refine --binary --dataset_file mevis --epochs 2 --lr_drop 1 --resume [MUTR checkpoint] --output_dir [output path] --mevis_path [MeViS path] --backbone swin_l_p4w7
+python -m torch.distributed.launch \
+    --nproc_per_node 1 \      # num of gpus during training
+    --master_port 10010 \
+    --use_env train.py \
+    --with_box_refine \
+    --binary \
+    --dataset_file mevis \
+    --epochs 2 \
+    --lr_drop 1 \
+    --resume [MUTR checkpoint] \
+    --output_dir [output path] \
+    --mevis_path [MeViS path] \
+    --backbone swin_l_p4w7
 ```
 
 ## :round_pushpin: Inference
 Our checkpoint is available on [Google Drive](https://drive.google.com/file/d/1qaJhup2hhequeVbd-RnPlzloMfj-PNK1/view?usp=sharing).
 ```bash
-python inference_mevis.py --with_box_refine --binary --freeze_text_encoder --output_dir [output path] --resume [checkpoint path] --ngpu 1 --batch_size 1 --backbone swin_l_p4w7 --mevis_path [MeViS path] --split valid --sub_video_len 30 --no_sampling (optional, no sampling mode)
+python inference_mevis.py \
+    --with_box_refine \
+    --binary \
+    --output_dir [output path] \
+    --resume [checkpoint path] \
+    --ngpu 1 \
+    --batch_size 1 \
+    --backbone swin_l_p4w7 \
+    --mevis_path [MeViS path] \
+    --split valid \
+    --sub_video_len 30 
 ```
 
 ## :book: Citation
