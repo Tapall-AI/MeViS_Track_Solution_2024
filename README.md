@@ -40,6 +40,7 @@ python -m torch.distributed.launch \
     --mevis_path [MeViS path] \
     --backbone swin_l_p4w7
 ```
+Please note that different num of gpus lead to different scores (as discussed [here](https://github.com/Tapall-AI/MeViS_Track_Solution_2024/issues/3#issuecomment-2423260889)).
 
 ## :round_pushpin: Inference
 Our checkpoint is available on [Google Drive](https://drive.google.com/file/d/1qaJhup2hhequeVbd-RnPlzloMfj-PNK1/view?usp=sharing).
